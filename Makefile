@@ -44,5 +44,17 @@ show-accounts:
 deploy-token: compile
 	make TASK_NAME=deploy:token run-task
 
+.PHONY: deploy-mystery-bean
+deploy-mystery-bean: compile
+	make TASK_NAME=deploy:mystery-bean run-task
+
+.PHONY: deploy-green-bean
+deploy-green-bean: compile
+	make TASK_NAME=deploy:green-bean run-task
+
+.PHONY: deploy-flash-claim
+deploy-flash-claim: compile
+	make TASK_NAME=deploy:flash-claim run-task
+
 .PHONY: demo
 demo: init test show-accounts deploy-token

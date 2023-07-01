@@ -1,9 +1,9 @@
 {
-  "name": "solidity-starter",
+  "name": "airdrop-flash-claim-contracts",
   "version": "0.1.0",
   "author": "0xrjman",
   "license": "MIT",
-  "description": "A starter project for building solidity smart contracts with foundry & hardhat",
+  "description": "Azuki airdrop flash claimer for paraspace",
   "directories": {
     "lib": "lib",
     "test": "test"
