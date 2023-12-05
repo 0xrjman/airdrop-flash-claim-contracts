@@ -58,3 +58,7 @@ deploy-flash-claim: compile
 
 .PHONY: demo
 demo: init test show-accounts deploy-token
+
+.PHONY: hardhat
+hardhat:
+	npx hardhat node --hostname 0.0.0.0

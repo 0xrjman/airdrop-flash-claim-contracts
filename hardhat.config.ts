@@ -7,6 +7,7 @@ import { HardhatUserConfig, task } from "hardhat/config";
 import "hardhat-preprocessor";
 import path from "path";
 import * as dotenv from "dotenv";
+import { HardhatNetworkAccountUserConfig } from "hardhat/types";
 dotenv.config();
 
 function initTasksDefinitions() {
@@ -21,6 +22,23 @@ function initTasksDefinitions() {
 }
 
 initTasksDefinitions()
+
+const accounts = process.env.PRIVATE_KEY
+  ? [process.env.PRIVATE_KEY]
+  : process.env.MNEMONIC
+    ? {
+      mnemonic: process.env.MNEMONIC,
+      initialIndex: 0,
+      count: 20,
+    }
+    : []
+
+export const forkAccounts: HardhatNetworkAccountUserConfig[] = [
+  {
+    privateKey: process.env.PRIVATE_KEY || "",
+    balance: "1000000000000000000000000",
+  },
+];
 
 function getRemappings() {
   return fs
@@ -43,16 +61,24 @@ const config: HardhatUserConfig = {
   networks: {
     goerli: {
       url: process.env.RPC_URL || "",
-      accounts: process.env.PRIVATE_KEY
-        ? [process.env.PRIVATE_KEY]
-        : process.env.MNEMONIC
-          ? {
-            mnemonic: process.env.MNEMONIC,
-            initialIndex: 0,
-            count: 20,
-          }
-          : [],
+      accounts,
     },
+    hardhat: {
+      hardfork: "london",
+      blockGasLimit: 30000000,
+      gas: 30000000,
+      gasPrice: "auto",
+      chainId: 1,
+      throwOnTransactionFailures: true,
+      throwOnCallFailures: true,
+      accounts: forkAccounts,
+      loggingEnabled: true,
+      forking: {
+        url: process.env.RPC_URL || "",
+        blockNumber: Number(process.env.FORK_BLOCK_NUMBER),
+      },
+      allowUnlimitedContractSize: true,
+    }
   },
   paths: {
     sources: "./src", // Use ./src rather than ./contracts as Hardhat expects
@@ -70,8 +96,8 @@ const config: HardhatUserConfig = {
           });
         }
         return line;
-      },
-    }),
+      }
+    })
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
